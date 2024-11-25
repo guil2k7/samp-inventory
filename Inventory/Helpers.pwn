@@ -1,4 +1,4 @@
-// Copyright 2024 Maicol Castro (maicolcastro.abc@gmail.com).
+// Copyright 2024 Maicol Castro <maicolcastro.abc@gmail.com>.
 //
 // Distributed under the BSD 3-Clause License.
 // See LICENSE.txt in the root directory of this project

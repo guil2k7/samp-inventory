@@ -1,4 +1,4 @@
-// Copyright 2024 Maicol Castro (maicolcastro.abc@gmail.com).
+// Copyright 2024 Maicol Castro <maicolcastro.abc@gmail.com>.
 //
 // Distributed under the BSD 3-Clause License.
 // See LICENSE.txt in the root directory of this project
@@ -11,7 +11,8 @@
     (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
 #endif
 
-#define DIALOG_SELECT_AMOUNT 872
+#define DIALOG_SELECT_AMOUNT_TO_USE     872
+#define DIALOG_SELECT_AMOUNT_TO_DROP    873
 
 #define COLOR_SUCCESS      0x00FF00FF
 #define COLOR_ERROR        0xF44336FF

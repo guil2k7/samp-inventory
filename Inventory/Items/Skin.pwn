@@ -1,4 +1,4 @@
-// Copyright 2024 Maicol Castro (maicolcastro.abc@gmail.com).
+// Copyright 2024 Maicol Castro <maicolcastro.abc@gmail.com>.
 //
 // Distributed under the BSD 3-Clause License.
 // See LICENSE.txt in the root directory of this project
@@ -26,6 +26,12 @@ ItemSkinGetModel(itemID) {
     return itemID;
 }
 
+ItemSkinGetObjModel(itemID) {
+    #pragma unused itemID
+
+    return 1275;
+}
+
 ItemSkinGetRot(&Float:x, &Float:y, &Float:z) {
     x = 0.0;
     y = 0.0;
@@ -40,7 +46,7 @@ CMD:darskin(playerid, params[]) {
         return SendClientMessage(playerid, COLOR_INFO, "> Use /darskin [Nome/ID do jogador] [Skin]");
 
     if (skinID < 0 || skinID > 311)
-        return SendClientMessage(playerid, COLOR_ERROR, "> ID de skin inválida.");
+        return SendClientMessage(playerid, COLOR_ERROR, "> ID de skin inválido.");
 
     return TryToAddItemToInventory(playerid, targetid, ITEM_CLASS_SKIN, skinID, 1);
 }

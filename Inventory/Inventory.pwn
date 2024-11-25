@@ -5,6 +5,14 @@
 // See LICENSE.txt in the root directory of this project
 // or at https://opensource.org/license/bsd-3-clause.
 
+#include "Inventory/Definitions.pwn"
+#include "Inventory/Helpers.pwn"
+#include "Inventory/Items/Skin.pwn"
+#include "Inventory/Items/Vehicle.pwn"
+#include "Inventory/Items/Weapon.pwn"
+#include "Inventory/Item.pwn"
+#include "Inventory/Drop.pwn"
+
 #include <YSI_Coding\y_hooks>
 
 static PlayerText:s_pTDs[MAX_PLAYERS][64];
@@ -83,6 +91,30 @@ static UseItem(playerid, slotID, amount) {
     return 0;
 }
 
+static DropItem(playerid, slotID, amount) {
+    if (amount > s_pAmounts[playerid][slotID])
+        return SendClientMessage(playerid, COLOR_ERROR, "> Você não tem essa quantidade.");
+
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+
+    new dropID = ItemDropCreate(s_pItems[playerid][slotID], amount, x, y, z - 1.0);
+
+    if (dropID == ITEM_DROP_INVALID_ID)
+        return SendClientMessage(playerid, COLOR_ERROR, "> O servidor atingiu o número máximo de itens descartados. Aguarde um momento.");
+
+    s_pAmounts[playerid][slotID] -= amount;
+
+    if (s_pAmounts[playerid][slotID] == 0)
+        s_pItems[playerid][slotID] = 0;
+
+    ViewUpdateSlot(playerid, slotID);
+
+    s_pSlotSelected[playerid] = INVENTORY_SLOT_INVALID_ID;
+
+    return 0;
+}
+
 static OnClickSlot(playerid, slotID) {
     if (s_pAmounts[playerid][slotID] > 0)
         s_pSlotSelected[playerid] = slotID;
@@ -102,13 +134,31 @@ static OnClickUse(playerid) {
     static buf[128];
     format(buf, sizeof buf, "Escreva a quantidade que você deseja usar.\nQuantidade disponível: %d.", amount);
 
-    ShowPlayerDialog(playerid, DIALOG_SELECT_AMOUNT, DIALOG_STYLE_INPUT, "Quantidade", buf, "Usar", "Cancelar");
+    ShowPlayerDialog(playerid, DIALOG_SELECT_AMOUNT_TO_USE, DIALOG_STYLE_INPUT, "Usar Item", buf, "Usar", "Cancelar");
 
     return 0;
 }
 
 static OnClickDrop(playerid) {
-    SendClientMessage(playerid, COLOR_ERROR, "Quer algo completo? @guil2k7");
+    if (s_pSlotSelected[playerid] == INVENTORY_SLOT_INVALID_ID)
+        return SendClientMessage(playerid, COLOR_ERROR, "> Você não selecionou um slot.");
+
+    new slotID = s_pSlotSelected[playerid];
+
+    if (!ItemCanDrop(s_pItems[playerid][slotID]))
+        return SendClientMessage(playerid, COLOR_ERROR, "> Esse item não é descartável.");
+
+    new amount = s_pAmounts[playerid][slotID];
+
+    if (amount == 1)
+        return DropItem(playerid, s_pSlotSelected[playerid], 1);
+
+    static buf[128];
+    format(buf, sizeof buf, "Escreva a quantidade que você deseja soltar.\nQuantidade disponível: %d.", amount);
+
+    ShowPlayerDialog(playerid, DIALOG_SELECT_AMOUNT_TO_DROP, DIALOG_STYLE_INPUT, "Soltar Item", buf, "Soltar", "Cancelar");
+
+    return 0;
 }
 
 /* ================================ HOOKS ================================ */
@@ -148,13 +198,21 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[]) {
     if (!s_pIsInventoryOpen[playerid] || !response)
         return 1;
 
-    if (dialogid == DIALOG_SELECT_AMOUNT) {
+    if (dialogid == DIALOG_SELECT_AMOUNT_TO_USE) {
         new amount;
 
         if (sscanf(inputtext, "d", amount))
             return SendClientMessage(playerid, COLOR_ERROR, "> Quantidade inválida.");
 
         UseItem(playerid, s_pSlotSelected[playerid], amount);
+    }
+    else if (dialogid == DIALOG_SELECT_AMOUNT_TO_DROP) {
+        new amount;
+
+        if (sscanf(inputtext, "d", amount))
+            return SendClientMessage(playerid, COLOR_ERROR, "> Quantidade inválida.");
+
+        DropItem(playerid, s_pSlotSelected[playerid], amount);
     }
 
     return 1;

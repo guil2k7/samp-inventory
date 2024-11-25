@@ -1,4 +1,4 @@
-// Copyright 2024 Maicol Castro (maicolcastro.abc@gmail.com).
+// Copyright 2024 Maicol Castro <maicolcastro.abc@gmail.com>.
 //
 // Distributed under the BSD 3-Clause License.
 // See LICENSE.txt in the root directory of this project
@@ -58,6 +58,10 @@ ItemVehicleGetModel(itemID) {
     return itemID;
 }
 
+ItemVehicleGetObjModel(itemID) {
+    return itemID;
+}
+
 ItemVehicleGetRot(&Float:x, &Float:y, &Float:z) {
     x = 0.0;
     y = 0.0;
@@ -72,7 +76,7 @@ CMD:darveiculo(playerid, params[]) {
         return SendClientMessage(playerid, COLOR_INFO, "> Use /darveiculo [Nome/ID do jogador] [Modelo]");
 
     if (vehicleModel == -1)
-        return SendClientMessage(playerid, COLOR_ERROR, "> Modelo inválido");
+        return SendClientMessage(playerid, COLOR_ERROR, "> Modelo inválido.");
 
     return TryToAddItemToInventory(playerid, targetid, ITEM_CLASS_VEHICLE, vehicleModel, 1);
 }

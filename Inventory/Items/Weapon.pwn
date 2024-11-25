@@ -1,4 +1,4 @@
-// Copyright 2024 Maicol Castro (maicolcastro.abc@gmail.com).
+// Copyright 2024 Maicol Castro <maicolcastro.abc@gmail.com>.
 //
 // Distributed under the BSD 3-Clause License.
 // See LICENSE.txt in the root directory of this project
@@ -60,6 +60,10 @@ ItemWeaponUse(playerid, slotID, itemID, amount) {
 }
 
 ItemWeaponGetModel(itemID) {
+    return WEAPON_MODELS[itemID];
+}
+
+ItemWeaponGetObjModel(itemID) {
     return WEAPON_MODELS[itemID];
 }
 
