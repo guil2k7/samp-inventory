@@ -52,9 +52,7 @@ new const WEAPON_MODELS[] = {
     367
 };
 
-ItemWeaponUse(playerid, slotID, itemID, amount) {
-    #pragma unused slotID
-
+ItemWeaponUse(playerid, itemID, amount) {
     GivePlayerWeapon(playerid, itemID, amount);
 
     return 1;
@@ -80,10 +78,10 @@ CMD:dararma(playerid, params[]) {
     new ammo;
 
     if (sscanf(params, "rK<weapon>(-1)d", targetid, weaponID, ammo))
-        return SendClientMessage(playerid, COLOR_INFO, "> Use /dararma [Nome/ID do jogador] [Arma] [Munição]");
+        return SendClientMessage(playerid, COLOR_INFO, "> Use /dararma [Nome/ID do jogador] [Arma] [Muniï¿½ï¿½o]");
 
     if (weaponID == -1)
-        return SendClientMessage(playerid, COLOR_ERROR, "> Arma inválida.");
+        return SendClientMessage(playerid, COLOR_ERROR, "> Arma invï¿½lida.");
 
     return TryToAddItemToInventory(playerid, targetid, ITEM_CLASS_WEAPON, weaponID, ammo);
 }

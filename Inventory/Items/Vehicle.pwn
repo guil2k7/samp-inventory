@@ -27,12 +27,9 @@ hook OnPlayerStateChange(playerid, newstate, oldstate) {
     return 1;
 }
 
-ItemVehicleUse(playerid, slotID, itemID, amount) {
-    #pragma unused slotID
-    #pragma unused amount
-
+ItemVehicleUse(playerid, itemID) {
     if (IsPlayerInAnyVehicle(playerid)) {
-        SendClientMessage(playerid, COLOR_ERROR, "> Você não pode pegar um veículo enquanto estiver em um.");
+        SendClientMessage(playerid, COLOR_ERROR, "> Vocï¿½ nï¿½o pode pegar um veï¿½culo enquanto estiver em um.");
         return 0;
     }
 
@@ -66,7 +63,7 @@ ItemVehicleGetObjModel(itemID) {
 ItemVehicleGetRot(&Float:x, &Float:y, &Float:z) {
     x = 0.0;
     y = 0.0;
-    z = 0.0;   
+    z = 0.0;
 }
 
 CMD:darveiculo(playerid, params[]) {
@@ -77,7 +74,7 @@ CMD:darveiculo(playerid, params[]) {
         return SendClientMessage(playerid, COLOR_INFO, "> Use /darveiculo [Nome/ID do jogador] [Modelo]");
 
     if (vehicleModel == -1)
-        return SendClientMessage(playerid, COLOR_ERROR, "> Modelo inválido.");
+        return SendClientMessage(playerid, COLOR_ERROR, "> Modelo invï¿½lido.");
 
     return TryToAddItemToInventory(playerid, targetid, ITEM_CLASS_VEHICLE, vehicleModel, 1);
 }

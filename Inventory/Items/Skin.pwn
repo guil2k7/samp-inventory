@@ -5,15 +5,13 @@
 // See LICENSE.txt in the root directory of this project
 // or at https://opensource.org/license/bsd-3-clause.
 
-ItemSkinUse(playerid, slotID, itemID, amount) {
-    #pragma unused amount
-
+ItemSkinUse(playerid, slotID, itemID) {
     new currentSkinID = GetPlayerSkin(playerid);
 
     if (InventorySlotGetAmount(playerid, slotID) > 1) {
         if (InventoryAddItem(playerid, ItemCreate(ITEM_CLASS_SKIN, currentSkinID), 1) == INVENTORY_SLOT_INVALID_ID)
-            return SendClientMessage(playerid, COLOR_ERROR, "> Você não pode trocar de roupa se não tiver espaço para guardar as roupas atuais.");
-    } 
+            return SendClientMessage(playerid, COLOR_ERROR, "> Vocï¿½ nï¿½o pode trocar de roupa se nï¿½o tiver espaï¿½o para guardar as roupas atuais.");
+    }
     else {
         InventorySlotSet(playerid, slotID, ItemCreate(ITEM_CLASS_SKIN, currentSkinID), 1);
     }
@@ -28,8 +26,6 @@ ItemSkinGetModel(itemID) {
 }
 
 ItemSkinGetObjModel(itemID) {
-    #pragma unused itemID
-
     return 1275;
 }
 
@@ -47,7 +43,7 @@ CMD:darskin(playerid, params[]) {
         return SendClientMessage(playerid, COLOR_INFO, "> Use /darskin [Nome/ID do jogador] [Skin]");
 
     if (skinID < 0 || skinID > 311)
-        return SendClientMessage(playerid, COLOR_ERROR, "> ID de skin inválido.");
+        return SendClientMessage(playerid, COLOR_ERROR, "> ID de skin invï¿½lido.");
 
     return TryToAddItemToInventory(playerid, targetid, ITEM_CLASS_SKIN, skinID, 1);
 }

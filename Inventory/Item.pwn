@@ -5,116 +5,81 @@
 // See LICENSE.txt in the root directory of this project
 // or at https://opensource.org/license/bsd-3-clause.
 
-static enum E_ITEM_CLASS {
-    ITEM_VFN_USE,
-    ITEM_VFN_GETMODEL,
-    ITEM_VFN_GETOBJMODEL,
-    ITEM_VFN_GETROT,
-
-    bool:ITEM_ATTR_CAN_DROP,
-}
-
-stock g_itemsClasses[ITEM_CLASS_COUNT][E_ITEM_CLASS] = {
-    // ITEM_NONE
-    { 0, 0, 0, 0, false },
-
-    {
-        __addressof(ItemWeaponUse), 
-        __addressof(ItemWeaponGetModel),
-        __addressof(ItemWeaponGetObjModel),
-        __addressof(ItemWeaponGetRot),
-        true
-    },
-    {
-        __addressof(ItemSkinUse),
-        __addressof(ItemSkinGetModel),
-        __addressof(ItemSkinGetObjModel),
-        __addressof(ItemSkinGetRot),
-        true
-    },
-    {
-        __addressof(ItemVehicleUse),
-        __addressof(ItemVehicleGetModel),
-        __addressof(ItemVehicleGetObjModel),
-        __addressof(ItemVehicleGetRot),
-        false
-    }
-};
-
-/* ================================================================ */
-
 stock ItemUse(playerid, slotID, item, amount) {
-    new vfunction = g_itemsClasses[item & 0xFF][ITEM_VFN_USE];
     new itemID = (item >> 8) & 0xFFFFFF;
-    new returnValue;
 
-    #emit PUSH.S amount
-    #emit PUSH.S itemID
-    #emit PUSH.S slotID
-    #emit PUSH.S playerid
-    #emit PUSH.C 16
+    switch (item & 0xFF) {
+        case ITEM_CLASS_WEAPON:
+            return ItemWeaponUse(playerid, itemID, amount);
 
-    // Why the Windows version of SA-MP doesn't have CALL.PRI?
-    #emit LCTRL 6
-    #emit ADD.C 28
-    #emit PUSH.PRI
-    #emit LOAD.S.PRI vfunction
-    #emit SCTRL 6
+        case ITEM_CLASS_SKIN:
+            return ItemSkinUse(playerid, slotID, itemID);
 
-    #emit STOR.S.PRI returnValue
+        case ITEM_CLASS_VEHICLE:
+            return ItemVehicleUse(playerid, itemID);
+    }
 
-    return returnValue;
+    return 0;
 }
 
 stock ItemGetModel(item) {
-    new vfunction = g_itemsClasses[item & 0xFF][ITEM_VFN_GETMODEL];
     new itemID = (item >> 8) & 0xFFFFFF;
-    new returnValue;
 
-    #emit PUSH.S itemID
-    #emit PUSH.C 4
-    #emit LCTRL 6
-    #emit ADD.C 28
-    #emit PUSH.PRI
-    #emit LOAD.S.PRI vfunction
-    #emit SCTRL 6
-    #emit STOR.S.PRI returnValue
+    switch (item & 0xFF) {
+        case ITEM_CLASS_WEAPON:
+            return ItemWeaponGetModel(itemID);
 
-    return returnValue;
+        case ITEM_CLASS_SKIN:
+            return ItemSkinGetModel();
+
+        case ITEM_CLASS_VEHICLE:
+            return ItemVehicleGetModel(itemID);
+    }
+
+    return 0;
 }
 
 stock ItemGetObjectModel(item) {
-    new vfunction = g_itemsClasses[item & 0xFF][ITEM_VFN_GETOBJMODEL];
     new itemID = (item >> 8) & 0xFFFFFF;
-    new returnValue;
 
-    #emit PUSH.S itemID
-    #emit PUSH.C 4
-    #emit LCTRL 6
-    #emit ADD.C 28
-    #emit PUSH.PRI
-    #emit LOAD.S.PRI vfunction
-    #emit SCTRL 6
-    #emit STOR.S.PRI returnValue
+    switch (item & 0xFF) {
+        case ITEM_CLASS_WEAPON:
+            return ItemWeaponGetObjModel(itemID);
 
-    return returnValue;
+        case ITEM_CLASS_SKIN:
+            return ItemSkinGetObjModel(itemID);
+
+        case ITEM_CLASS_VEHICLE:
+            return ItemVehicleGetObjModel(itemID);
+    }
+
+    return 0;
 }
 
 stock ItemGetRotation(item, &Float:x, &Float:y, &Float:z) {
-    new vfunction = g_itemsClasses[item & 0xFF][ITEM_VFN_GETROT];
+    switch (item & 0xFF) {
+        case ITEM_CLASS_WEAPON:
+            ItemWeaponGetRot(x, y, z);
 
-    #emit PUSH.S z
-    #emit PUSH.S y
-    #emit PUSH.S x
-    #emit PUSH.C 12
+        case ITEM_CLASS_SKIN:
+            ItemSkinGetRot(x, y, z);
 
-    #emit LCTRL 6
-    #emit ADD.C 28
-    #emit PUSH.PRI
-    #emit LOAD.S.PRI vfunction
-    #emit SCTRL 6
+        case ITEM_CLASS_VEHICLE:
+            ItemVehicleGetRot(x, y, z);
+    }
 }
 
 stock bool:ItemCanDrop(item) {
-    return g_itemsClasses[item & 0xFF][ITEM_ATTR_CAN_DROP];
+    switch (item & 0xFF) {
+        case ITEM_CLASS_WEAPON:
+            return true;
+
+        case ITEM_CLASS_SKIN:
+            return true;
+
+        case ITEM_CLASS_VEHICLE:
+            return false;
+    }
+
+    return false;
 }
